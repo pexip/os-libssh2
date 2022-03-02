@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -e
+
+exec 2>&1
+
+./configure --disable-static --disable-rpath
+
+make
+
+rm -f src/.libs/libssh2.so*
+ln -s /usr/lib/$(dpkg-architecture -qDEB_BUILD_MULTIARCH)/libssh2.so src/.libs/
+ln -s /usr/lib/$(dpkg-architecture -qDEB_BUILD_MULTIARCH)/libssh2.so.? src/.libs/
+ln -s /usr/lib/$(dpkg-architecture -qDEB_BUILD_MULTIARCH)/libssh2.so.?.?.? src/.libs/
+
+make check

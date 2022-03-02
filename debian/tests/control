@@ -1,0 +1,2 @@
+Tests: unit-test
+Depends: @, gcc, libc-dev, autoconf, libssl-dev, zlib1g-dev, chrpath, openssh-server

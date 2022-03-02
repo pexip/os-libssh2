@@ -1,0 +1,42 @@
+Source: libssh2
+Section: libs
+Priority: optional
+Maintainer: Nicolas Mora <babelouest@debian.org>
+Build-Depends: debhelper-compat (= 13)
+             , libssl-dev
+             , zlib1g-dev
+             , chrpath
+             , openssh-server
+Standards-Version: 4.6.0
+Homepage: https://libssh2.org/
+Rules-Requires-Root: no
+Vcs-Browser: https://salsa.debian.org/debian/libssh2
+Vcs-Git: https://salsa.debian.org/debian/libssh2.git
+
+Package: libssh2-1
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Pre-Depends: ${misc:Pre-Depends}
+Multi-Arch: same
+Description: SSH2 client-side library
+ libssh2 is a client-side C library implementing the SSH2 protocol.
+ It supports regular terminal, SCP and SFTP (v1-v5) sessions;
+ port forwarding, X11 forwarding; password, key-based and
+ keyboard-interactive authentication.
+ .
+ This package contains the runtime library.
+
+Package: libssh2-1-dev
+Section: libdevel
+Architecture: any
+Depends: libssh2-1 (= ${binary:Version}), ${misc:Depends}
+       , libssl-dev
+       , zlib1g-dev
+Multi-Arch: same
+Description: SSH2 client-side library (development headers)
+ libssh2 is a client-side C library implementing the SSH2 protocol.
+ It supports regular terminal, SCP and SFTP (v1-v5) sessions;
+ port forwarding, X11 forwarding; password, key-based and
+ keyboard-interactive authentication.
+ .
+ This package contains the development files.

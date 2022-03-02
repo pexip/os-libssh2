@@ -1,0 +1,4 @@
+ssh2-sh.patch
+manpage.patch
+0001-Add-lgpg-error-to-.pc-to-facilitate-static-linking.patch
+0001-Do-not-expose-private-libraries-nor-link-flags-to-us.patch

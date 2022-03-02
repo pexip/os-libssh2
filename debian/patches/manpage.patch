@@ -1,0 +1,14 @@
+Description: Fix typo
+Author: Nicolas Mora <babelouest@debian.org>
+Forwarded: not-needed
+--- a/docs/libssh2_userauth_publickey_frommemory.3
++++ b/docs/libssh2_userauth_publickey_frommemory.3
+@@ -14,7 +14,7 @@
+                                            size_t privatekeydata_len,
+                                            const char *passphrase);
+ .SH DESCRIPTION
+-This function allows to authenticate a session with a public key read from memory.
++This function allows one to authenticate a session with a public key read from memory.
+ It's only supported when libssh2 is backed by OpenSSL.
+ \fIsession\fP - Session instance as returned by
+ .BR libssh2_session_init_ex(3)
