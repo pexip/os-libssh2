@@ -1,3 +1,23 @@
+libssh2 (1.11.0-2) unstable; urgency=medium
+
+  * upload to unstable
+  * d/patch: re-enable sshd tests (Thanks Paul Howarth)
+
+ -- Nicolas Mora <babelouest@debian.org>  Fri, 09 Jun 2023 07:36:08 -0400
+
+libssh2 (1.11.0-1) experimental; urgency=medium
+
+  * New upstream release
+  * d/watch: Add gpg signature verification
+  * d/control: upgrade standards version to 4.6.2
+  * d/patches: remove ssh2-sh.patch
+  * d/patches: Update manpage.patch
+  * d/symbols: Update symbols
+  * d/tests: update unit-tests
+  * d/gitlab-ci.yml: Add salsa CI/CD script
+
+ -- Nicolas Mora <babelouest@debian.org>  Wed, 31 May 2023 10:00:05 -0400
+
 libssh2 (1.10.0-3) unstable; urgency=medium
 
   * d/patches: Fix ssh2.sh test (Closes: #1006379)

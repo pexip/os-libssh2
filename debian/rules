@@ -1,6 +1,7 @@
 #!/usr/bin/make -f
 
 export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+export OPENSSH_NO_DOCKER = true
 
 DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
@@ -13,7 +14,8 @@ CONFIGURE_EXTRA_FLAGS += --disable-rpath
 	dh $@ --with autoreconf
 
 override_dh_auto_configure:
-	dh_auto_configure -- $(CONFIGURE_EXTRA_FLAGS)
+	dh_auto_configure -- --disable-docker-tests \
+											 $(CONFIGURE_EXTRA_FLAGS)
 
 override_dh_installexamples:
 	dh_installexamples -a -X .deps -X Makefile -X .gitignore

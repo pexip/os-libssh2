@@ -1,15 +1,13 @@
 Description: Fix ssh2 test
 Author: Nicolas Mora <babelouest@debian.org>
 Forwarded: not-needed
---- a/tests/ssh2.sh
-+++ b/tests/ssh2.sh
-@@ -25,7 +25,8 @@
-     -o 'Port 4711' \
-     -o 'Protocol 2' \
-     -o "AuthorizedKeysFile $srcdir/etc/user.pub" \
--    -o 'UsePrivilegeSeparation no' \
-+    -o 'HostKeyAlgorithms +ssh-rsa' \
-+    -o 'PubkeyAcceptedAlgorithms +ssh-rsa' \
-     -o 'StrictModes no' \
-     -D \
-     $libssh2_sshd_params &
+--- a/tests/test_sshd.test
++++ b/tests/test_sshd.test
+@@ -71,6 +71,7 @@
+ # shellcheck disable=SC2086
+ "${SSHD}" \
+   -f "${SSHD_FIXTURE_CONFIG:-${d}/openssh_server/sshd_config}" \
++  -o 'StrictModes no' \
+   -o 'Port 4711' \
+   -h "${d}/openssh_server/ssh_host_rsa_key" \
+   -h "${d}/openssh_server/ssh_host_ecdsa_key" \
