@@ -4,7 +4,7 @@ set -e
 
 exec 2>&1
 
-./configure --disable-static --disable-rpath
+./configure --disable-docker-tests
 
 make
 
