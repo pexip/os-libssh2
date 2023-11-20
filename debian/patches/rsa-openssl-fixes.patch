@@ -1,0 +1,117 @@
+--- a/src/openssl.c
++++ b/src/openssl.c
+@@ -337,7 +337,7 @@
+         EVP_PKEY_CTX_free(ctx);
+     }
+ 
+-    #else
++#else
+ 
+     ret = RSA_verify(nid_type, hash, (unsigned int) hash_len,
+                      (unsigned char *) sig,
+@@ -1486,7 +1486,7 @@
+ }
+ 
+ static unsigned char *
+-gen_publickey_from_dsa(LIBSSH2_SESSION* session, DSA *dsa,
++gen_publickey_from_dsa(LIBSSH2_SESSION* session, libssh2_dsa_ctx *dsa,
+                        size_t *key_len)
+ {
+     int            p_bytes, q_bytes, g_bytes, k_bytes;
+@@ -1494,23 +1494,32 @@
+     unsigned char *key;
+     unsigned char *p;
+ 
++#if defined(USE_OPENSSL_3)
++    BIGNUM * p_bn = NULL;
++    BIGNUM * q = NULL;
++    BIGNUM * g = NULL;
++    BIGNUM * pub_key = NULL;
++    EVP_PKEY_get_bn_param(dsa,OSSL_PKEY_PARAM_FFC_P,&p_bn);
++    EVP_PKEY_get_bn_param(dsa,OSSL_PKEY_PARAM_FFC_Q,&q);
++    EVP_PKEY_get_bn_param(dsa,OSSL_PKEY_PARAM_FFC_G,&g);
++
++    EVP_PKEY_get_bn_param(dsa,OSSL_PKEY_PARAM_PUB_KEY,&pub_key);
++#else
+     const BIGNUM * p_bn;
+     const BIGNUM * q;
+     const BIGNUM * g;
+     const BIGNUM * pub_key;
+-#ifdef HAVE_OPAQUE_STRUCTS
++#if defined(HAVE_OPAQUE_STRUCTS)
+     DSA_get0_pqg(dsa, &p_bn, &q, &g);
++    DSA_get0_key(dsa, &pub_key, NULL);
+ #else
+     p_bn = dsa->p;
+     q = dsa->q;
+     g = dsa->g;
+-#endif
+ 
+-#ifdef HAVE_OPAQUE_STRUCTS
+-    DSA_get0_key(dsa, &pub_key, NULL);
+-#else
+     pub_key = dsa->pub_key;
+ #endif
++#endif
+     p_bytes = BN_num_bytes(p_bn) + 1;
+     q_bytes = BN_num_bytes(q) + 1;
+     g_bytes = BN_num_bytes(g) + 1;
+@@ -1538,6 +1547,13 @@
+     p = write_bn(p, pub_key, k_bytes);
+ 
+     *key_len = (size_t)(p - key);
++
++#if defined(USE_OPENSSL_3)
++    BN_clear_free(p_bn);
++    BN_clear_free(q);
++    BN_clear_free(g);
++    BN_clear_free(pub_key);
++#endif
+     return key;
+ }
+ 
+@@ -1549,7 +1565,7 @@
+                            size_t *pubkeydata_len,
+                            EVP_PKEY *pk)
+ {
+-    DSA*           dsa = NULL;
++    libssh2_dsa_ctx*           dsa = NULL;
+     unsigned char *key;
+     unsigned char *method_buf = NULL;
+     size_t  key_len;
+@@ -1558,7 +1574,11 @@
+                    LIBSSH2_TRACE_AUTH,
+                    "Computing public key from DSA private key envelope"));
+ 
++#ifdef USE_OPENSSL_3
++    dsa=pk;
++#else
+     dsa = EVP_PKEY_get1_DSA(pk);
++#endif
+     if(!dsa) {
+         /* Assume memory allocation error... what else could it be ? */
+         goto __alloc_error;
+@@ -1573,7 +1593,9 @@
+     if(!key) {
+         goto __alloc_error;
+     }
+-    DSA_free(dsa);
++#ifndef USE_OPENSSL_3
++    _libssh2_dsa_free(dsa);
++#endif
+ 
+     memcpy(method_buf, "ssh-dss", 7);
+     *method         = method_buf;
+@@ -1583,9 +1605,11 @@
+     return 0;
+ 
+ __alloc_error:
++#if defined(USE_OPENSSL_3)
+     if(dsa) {
+-        DSA_free(dsa);
++        _libssh2_dsa_free(dsa);
+     }
++#endif
+     if(method_buf) {
+         LIBSSH2_FREE(session, method_buf);
+     }
