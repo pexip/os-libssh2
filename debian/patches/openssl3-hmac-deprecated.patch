@@ -1,0 +1,172 @@
+--- a/src/mac.c
++++ b/src/mac.c
+@@ -133,7 +133,7 @@
+     if(addtl && addtl_len) {
+         libssh2_hmac_update(ctx, addtl, addtl_len);
+     }
+-    libssh2_hmac_final(ctx, buf);
++    libssh2_hmac_final(ctx, buf, 64);
+     libssh2_hmac_cleanup(&ctx);
+ 
+     return 0;
+@@ -188,7 +188,7 @@
+     if(addtl && addtl_len) {
+         libssh2_hmac_update(ctx, addtl, addtl_len);
+     }
+-    libssh2_hmac_final(ctx, buf);
++    libssh2_hmac_final(ctx, buf, 32);
+     libssh2_hmac_cleanup(&ctx);
+ 
+     return 0;
+@@ -245,7 +245,7 @@
+     if(addtl && addtl_len) {
+         libssh2_hmac_update(ctx, addtl, addtl_len);
+     }
+-    libssh2_hmac_final(ctx, buf);
++    libssh2_hmac_final(ctx, buf, 20);
+     libssh2_hmac_cleanup(&ctx);
+ 
+     return 0;
+@@ -330,7 +330,7 @@
+     if(addtl && addtl_len) {
+         libssh2_hmac_update(ctx, addtl, addtl_len);
+     }
+-    libssh2_hmac_final(ctx, buf);
++    libssh2_hmac_final(ctx, buf, 16);
+     libssh2_hmac_cleanup(&ctx);
+ 
+     return 0;
+@@ -405,7 +405,7 @@
+     if(addtl && addtl_len) {
+         libssh2_hmac_update(ctx, addtl, addtl_len);
+     }
+-    libssh2_hmac_final(ctx, buf);
++    libssh2_hmac_final(ctx, buf, 20);
+     libssh2_hmac_cleanup(&ctx);
+ 
+     return 0;
+--- a/src/openssl.h
++++ b/src/openssl.h
+@@ -319,7 +319,56 @@
+ #define libssh2_md5_final(ctx, out) EVP_DigestFinal(&(ctx), out, NULL)
+ #endif
+ 
+-#ifdef HAVE_OPAQUE_STRUCTS
++#if defined(USE_OPENSSL_3)
++
++#define libssh2_hmac_ctx EVP_MAC_CTX *
++#define libssh2_hmac_ctx_init(ctx) ctx = EVP_MAC_CTX_new(EVP_MAC_fetch(NULL, "HMAC", NULL))
++#define libssh2_hmac_sha1_init(ctx, key, keylen) \
++    { \
++        OSSL_PARAM params[2]; \
++        params[0] = OSSL_PARAM_construct_utf8_string("digest", "SHA1",0); \
++        params[1] = OSSL_PARAM_construct_end(); \
++        EVP_MAC_init(*(ctx), key, keylen, params); \
++    }
++#define libssh2_hmac_md5_init(ctx, key, keylen) \
++    { \
++        OSSL_PARAM params[2]; \
++        params[0] = OSSL_PARAM_construct_utf8_string("digest", "MD5",0); \
++        params[1] = OSSL_PARAM_construct_end(); \
++        EVP_MAC_init(*(ctx), key, keylen, params); \
++    }
++#define libssh2_hmac_ripemd160_init(ctx, key, keylen) \
++    { \
++        OSSL_PARAM params[2]; \
++        params[0] = OSSL_PARAM_construct_utf8_string("digest", "RIPEMD160",0); \
++        params[1] = OSSL_PARAM_construct_end(); \
++        EVP_MAC_init(*(ctx), key, keylen, params); \
++    }
++#define libssh2_hmac_sha256_init(ctx, key, keylen) \
++    { \
++        OSSL_PARAM params[2]; \
++        params[0] = OSSL_PARAM_construct_utf8_string("digest", "SHA2-256",0); \
++        params[1] = OSSL_PARAM_construct_end(); \
++        EVP_MAC_init(*(ctx), key, keylen, params); \
++    }
++#define libssh2_hmac_sha512_init(ctx, key, keylen) \
++    { \
++        OSSL_PARAM params[2]; \
++        params[0] = OSSL_PARAM_construct_utf8_string("digest", "SHA2-512",0); \
++        params[1] = OSSL_PARAM_construct_end(); \
++        EVP_MAC_init(*(ctx), key, keylen, params); \
++    }
++#define libssh2_hmac_update(ctx, data, datalen) \
++    EVP_MAC_update(ctx, data, datalen)
++#define libssh2_hmac_final(ctx, data, datalen) \
++    { \
++        size_t outl; \
++        EVP_MAC_final(ctx, data, &outl, datalen); \
++    }
++#define libssh2_hmac_cleanup(ctx) EVP_MAC_CTX_free(*(ctx))
++
++#elif defined(HAVE_OPAQUE_STRUCTS)
++
+ #define libssh2_hmac_ctx HMAC_CTX *
+ #define libssh2_hmac_ctx_init(ctx) ctx = HMAC_CTX_new()
+ #define libssh2_hmac_sha1_init(ctx, key, keylen) \
+@@ -343,7 +392,9 @@
+ #endif /* LIBSSH2_WOLFSSL */
+ #define libssh2_hmac_final(ctx, data) HMAC_Final(ctx, data, NULL)
+ #define libssh2_hmac_cleanup(ctx) HMAC_CTX_free(*(ctx))
++
+ #else
++
+ #define libssh2_hmac_ctx HMAC_CTX
+ #define libssh2_hmac_ctx_init(ctx) \
+     HMAC_CTX_init(&ctx)
+--- a/src/libgcrypt.h
++++ b/src/libgcrypt.h
+@@ -154,7 +154,7 @@
+     gcry_md_setkey(*ctx, key, keylen)
+ #define libssh2_hmac_update(ctx, data, datalen) \
+     gcry_md_write(ctx, (unsigned char *) data, datalen)
+-#define libssh2_hmac_final(ctx, data) \
++#define libssh2_hmac_final(ctx, data, datalen) \
+     memcpy(data, gcry_md_read(ctx, 0), \
+            gcry_md_get_algo_dlen(gcry_md_get_algo(ctx)))
+ #define libssh2_hmac_cleanup(ctx) gcry_md_close(*ctx)
+--- a/src/mbedtls.h
++++ b/src/mbedtls.h
+@@ -126,7 +126,7 @@
+     mbedtls_md_free(pctx)
+ #define libssh2_hmac_update(ctx, data, datalen) \
+     mbedtls_md_hmac_update(&ctx, (const unsigned char *) data, datalen)
+-#define libssh2_hmac_final(ctx, hash) \
++#define libssh2_hmac_final(ctx, hash, datalen)		\
+     mbedtls_md_hmac_finish(&ctx, hash)
+ 
+ #define libssh2_hmac_sha1_init(pctx, key, keylen) \
+--- a/src/os400qc3.h
++++ b/src/os400qc3.h
+@@ -301,7 +301,7 @@
+ #define libssh2_hmac_update(ctx, data, datalen)                         \
+     libssh2_os400qc3_hmac_update(&(ctx),                                \
+                                  data, datalen)
+-#define libssh2_hmac_final(ctx, data)           \
++#define libssh2_hmac_final(ctx, data, datalen)		\
+     libssh2_os400qc3_hmac_final(&(ctx), data)
+ #define libssh2_hmac_cleanup(ctx)               \
+     _libssh2_os400qc3_crypto_dtor(ctx)
+--- a/src/wincng.h
++++ b/src/wincng.h
+@@ -248,7 +248,7 @@
+     _libssh2_wincng_hash_update(&ctx, \
+                                 (const unsigned char *) data, \
+                                 (unsigned long) datalen)
+-#define libssh2_hmac_final(ctx, hash) \
++#define libssh2_hmac_final(ctx, hash, datalen)		\
+     _libssh2_wincng_hmac_final(&ctx, hash)
+ #define libssh2_hmac_cleanup(ctx) \
+     _libssh2_wincng_hmac_cleanup(ctx)
+--- a/src/knownhost.c
++++ b/src/knownhost.c
+@@ -430,7 +430,7 @@
+                                            node->salt_len);
+                     libssh2_hmac_update(ctx, (unsigned char *)host,
+                                         strlen(host));
+-                    libssh2_hmac_final(ctx, hash);
++                    libssh2_hmac_final(ctx, hash, SHA_DIGEST_LENGTH);
+                     libssh2_hmac_cleanup(&ctx);
+ 
+                     if(!memcmp(hash, node->name, SHA_DIGEST_LENGTH))
