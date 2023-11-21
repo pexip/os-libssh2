@@ -5,3 +5,4 @@ manpage.patch
 openssl3-non-deprecated.patch
 openssl3-hmac-deprecated.patch
 rsa-openssl-fixes.patch
+username.patch

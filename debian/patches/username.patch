@@ -1,0 +1,46 @@
+diff --git a/tests/session_fixture.c b/tests/session_fixture.c
+index 3bb9da2..4671117 100644
+--- a/tests/session_fixture.c
++++ b/tests/session_fixture.c
+@@ -430,11 +430,18 @@ int test_auth_pubkey(LIBSSH2_SESSION *session, int flags,
+ 
+     /* Ignore our hard-wired Dockerfile user when not running under Docker */
+     if(!openssh_fixture_have_docker() && strcmp(username, "libssh2") == 0) {
+-        username = getenv("USER");
++        if(getenv("USER"))
++            username = getenv("USER");
++        else if(getenv("LOGNAME"))
++            username = getenv("LOGNAME");
+ #ifdef WIN32
+-        if(!username)
++        else if(getenv("USERNAME"))
+             username = getenv("USERNAME");
+ #endif
++        else {
++            fprintf(stderr, "Failed to find a username from env\n");
++            return 1;
++        }
+     }
+ 
+     userauth_list = libssh2_userauth_list(session, username,
+diff --git a/tests/test_ssh2.c b/tests/test_ssh2.c
+index a637cdc..6e28598 100644
+--- a/tests/test_ssh2.c
++++ b/tests/test_ssh2.c
+@@ -63,10 +63,16 @@ int main(int argc, char *argv[])
+ 
+     if(getenv("USER"))
+         username = getenv("USER");
++    else if(getenv("LOGNAME"))
++        username = getenv("LOGNAME");
+ #ifdef WIN32
+     else if(getenv("USERNAME"))
+         username = getenv("USERNAME");
+ #endif
++    else {
++        fprintf(stderr, "Failed to find a username from env\n");
++        return 1;
++    }
+ 
+     if(getenv("PRIVKEY"))
+         privkey = getenv("PRIVKEY");
