@@ -1,0 +1,44 @@
+Description: Backport PR 1241
+Author: Nicolas Mora <babelouest@debian.org>
+Forwarded: https://github.com/libssh2/libssh2/issues/1240
+--- a/tests/session_fixture.c
++++ b/tests/session_fixture.c
+@@ -431,10 +431,13 @@
+     /* Ignore our hard-wired Dockerfile user when not running under Docker */
+     if(!openssh_fixture_have_docker() && strcmp(username, "libssh2") == 0) {
+         username = getenv("USER");
+-#ifdef WIN32
+-        if(!username)
++        if(!username) {
++#ifdef _WIN32
+             username = getenv("USERNAME");
++#else
++            username = getenv("LOGNAME");
+ #endif
++        }
+     }
+ 
+     userauth_list = libssh2_userauth_list(session, username,
+--- a/tests/test_ssh2.c
++++ b/tests/test_ssh2.c
+@@ -61,12 +61,16 @@
+     (void)argc;
+     (void)argv;
+ 
++    #ifdef _WIN32
++    #define LIBSSH2_FALLBACK_USER_ENV "USERNAME"
++    #else
++    #define LIBSSH2_FALLBACK_USER_ENV "LOGNAME"
++    #endif
++
+     if(getenv("USER"))
+         username = getenv("USER");
+-#ifdef WIN32
+-    else if(getenv("USERNAME"))
+-        username = getenv("USERNAME");
+-#endif
++    else if(getenv(LIBSSH2_FALLBACK_USER_ENV))
++        username = getenv(LIBSSH2_FALLBACK_USER_ENV);
+ 
+     if(getenv("PRIVKEY"))
+         privkey = getenv("PRIVKEY");
