@@ -1,3 +1,9 @@
+libssh2 (1.11.0-3) unstable; urgency=medium
+
+  * d/patch: Backport PR-1241 from upstream (Closes: #1056348)
+
+ -- Nicolas Mora <babelouest@debian.org>  Tue, 28 Nov 2023 13:12:56 -0500
+
 libssh2 (1.11.0-2pexip1) pexip-bookworm; urgency=medium
 
   * Initial bookworm upload.
