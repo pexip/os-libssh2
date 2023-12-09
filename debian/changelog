@@ -1,3 +1,9 @@
+libssh2 (1.11.0-3pexip1) pexip-bookworm; urgency=medium
+
+  * New upstream release.
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Sat, 09 Dec 2023 22:54:19 +0000
+
 libssh2 (1.11.0-3) unstable; urgency=medium
 
   * d/patch: Backport PR-1241 from upstream (Closes: #1056348)
