@@ -3,3 +3,4 @@ manpage.patch
 0001-Add-lgpg-error-to-.pc-to-facilitate-static-linking.patch
 0001-Do-not-expose-private-libraries-nor-link-flags-to-us.patch
 PR-1241.patch
+CVE-2023-48795.patch

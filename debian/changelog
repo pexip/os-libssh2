@@ -1,3 +1,11 @@
+libssh2 (1.11.0-4) unstable; urgency=medium
+
+  * d/patch: Add patch for Terrapin attack
+    Fixes CVE-2023-48795 (Closes: #1059005)
+  * d/copyright: Update copyright years
+
+ -- Nicolas Mora <babelouest@debian.org>  Tue, 19 Dec 2023 17:33:18 -0500
+
 libssh2 (1.11.0-3) unstable; urgency=medium
 
   * d/patch: Backport PR-1241 from upstream (Closes: #1056348)
