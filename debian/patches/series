@@ -6,3 +6,4 @@ openssl3-non-deprecated.patch
 openssl3-hmac-deprecated.patch
 rsa-openssl-fixes.patch
 PR-1241.patch
+CVE-2023-48795.patch
