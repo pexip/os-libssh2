@@ -5,6 +5,7 @@ Subject: [PATCH] Do not expose private libraries nor link flags to users of
  libssh2
 
 Reported in https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=747417
+Forwarded: not-needed
 ---
  libssh2.pc.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)

@@ -1,5 +1,5 @@
 # SymbolsHelper-Confirmed: 1.11.0 amd64
-libssh2.so.1 libssh2-1 #MINVER#
+libssh2.so.1 libssh2-1t64 #MINVER#
 * Build-Depends-Package: libssh2-1-dev
  libssh2_agent_connect@Base 1.2.3
  libssh2_agent_disconnect@Base 1.2.3
