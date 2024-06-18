@@ -12,6 +12,7 @@ would cause overlinking of libssh2, and there is no separate variable for
 
 All this mess ought to be solved in gcrypt inself by providing .pc file,
 but it is not.
+Forwarded: not-needed
 
 ---
  libssh2.pc.in | 2 +-
