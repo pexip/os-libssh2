@@ -14,18 +14,12 @@ All this mess ought to be solved in gcrypt inself by providing .pc file,
 but it is not.
 Forwarded: not-needed
 
----
- libssh2.pc.in | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Index: libssh2/libssh2.pc.in
-===================================================================
---- libssh2.orig/libssh2.pc.in
-+++ libssh2/libssh2.pc.in
-@@ -13,5 +13,5 @@ Description: Library for SSH-based commu
- Version: @LIBSSH2VER@
- Requires.private: @LIBSREQUIRED@
- Libs: -L${libdir} -lssh2 @LIBS@
--Libs.private: @LIBS@
-+Libs.private: @LIBS@ -lgpg-error
+--- a/libssh2.pc.in
++++ b/libssh2.pc.in
+@@ -17,5 +17,5 @@
+ Requires: @LIBSSH2_PC_REQUIRES@
+ Requires.private: @LIBSSH2_PC_REQUIRES_PRIVATE@
+ Libs: -L${libdir} -lssh2 @LIBSSH2_PC_LIBS@
+-Libs.private: @LIBSSH2_PC_LIBS_PRIVATE@
++Libs.private: @LIBSSH2_PC_LIBS_PRIVATE@ -lgpg-error
  Cflags: -I${includedir}

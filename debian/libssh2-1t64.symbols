@@ -1,4 +1,4 @@
-# SymbolsHelper-Confirmed: 1.11.0 amd64
+# SymbolsHelper-Confirmed: 1.11.1 amd64
 libssh2.so.1 libssh2-1t64 #MINVER#
 * Build-Depends-Package: libssh2-1-dev
  libssh2_agent_connect@Base 1.2.3
@@ -81,6 +81,7 @@ libssh2.so.1 libssh2-1t64 #MINVER#
  libssh2_session_banner_get@Base 1.4.0
  libssh2_session_banner_set@Base 1.4.0
  libssh2_session_block_directions@Base 1.0
+ libssh2_session_callback_set2@Base 1.11.1
  libssh2_session_callback_set@Base 1.0
  libssh2_session_disconnect_ex@Base 1.0
  libssh2_session_flag@Base 1.0
@@ -112,6 +113,7 @@ libssh2.so.1 libssh2-1t64 #MINVER#
  libssh2_sftp_mkdir_ex@Base 1.0
  libssh2_sftp_open_ex@Base 1.0
  libssh2_sftp_open_ex_r@Base 1.11.0
+ libssh2_sftp_posix_rename_ex@Base 1.11.1
  libssh2_sftp_read@Base 1.0
  libssh2_sftp_readdir_ex@Base 1.0
  libssh2_sftp_rename_ex@Base 1.0
