@@ -13,6 +13,9 @@
 # PARTICULAR PURPOSE.
 
 @SET_MAKE@
+
+# Copyright (C) The libssh2 project and its contributors.
+# SPDX-License-Identifier: BSD-3-Clause
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -87,21 +90,26 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-TESTS = mansyntax.sh $(am__EXEEXT_4) $(am__EXEEXT_2) $(am__append_2) \
-	$(am__append_4)
-@RUN_DOCKER_TESTS_TRUE@am__append_1 = $(DOCKER_TESTS)
-@RUN_SSHD_TESTS_TRUE@@SSHD_TRUE@am__append_2 = test_sshd.test
-@RUN_SSHD_TESTS_TRUE@@SSHD_TRUE@am__append_3 = SSHD="$(SSHD)"
-@RUN_DOCKER_TESTS_TRUE@am__append_4 = test_read_algos.test
-check_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) $(am__EXEEXT_3)
+
+# Get DOCKER_TESTS, DOCKER_TESTS_STATIC, STANDALONE_TESTS, STANDALONE_TESTS_STATOC, SSHD_TESTS,
+# librunner_la_SOURCES defines and *_LDFLAGS for statically linked tests.
+@HAVE_LIB_STATIC_TRUE@am__append_1 = $(DOCKER_TESTS_STATIC)
+@HAVE_LIB_STATIC_TRUE@am__append_2 = $(STANDALONE_TESTS_STATIC)
+TESTS = mansyntax.sh $(am__EXEEXT_8) $(am__EXEEXT_6) $(am__append_4) \
+	$(am__append_6)
+@RUN_DOCKER_TESTS_TRUE@am__append_3 = $(DOCKER_TESTS)
+@RUN_SSHD_TESTS_TRUE@@SSHD_TRUE@am__append_4 = test_sshd.test
+@RUN_SSHD_TESTS_TRUE@@SSHD_TRUE@am__append_5 = SSHD="$(SSHD)"
+@RUN_DOCKER_TESTS_TRUE@am__append_6 = test_read_algos.test
+check_PROGRAMS = $(am__EXEEXT_3) $(am__EXEEXT_6) $(am__EXEEXT_7)
 subdir = tests
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/autobuild.m4 \
-	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/lib-ld.m4 \
+	$(top_srcdir)/m4/lib-link.m4 $(top_srcdir)/m4/lib-prefix.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/acinclude.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
@@ -109,9 +117,11 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/src/libssh2_config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__EXEEXT_1 = test_aa_warmup$(EXEEXT) test_agent_forward_ok$(EXEEXT) \
+am__EXEEXT_1 = test_auth_keyboard_info_request$(EXEEXT) \
+	test_hostkey$(EXEEXT)
+@HAVE_LIB_STATIC_TRUE@am__EXEEXT_2 = $(am__EXEEXT_1)
+am__EXEEXT_3 = test_aa_warmup$(EXEEXT) test_agent_forward_ok$(EXEEXT) \
 	test_auth_keyboard_fail$(EXEEXT) \
-	test_auth_keyboard_info_request$(EXEEXT) \
 	test_auth_keyboard_ok$(EXEEXT) \
 	test_auth_password_fail_password$(EXEEXT) \
 	test_auth_password_fail_username$(EXEEXT) \
@@ -123,12 +133,16 @@ am__EXEEXT_1 = test_aa_warmup$(EXEEXT) test_agent_forward_ok$(EXEEXT) \
 	test_auth_pubkey_ok_ed25519_encrypted$(EXEEXT) \
 	test_auth_pubkey_ok_ed25519_mem$(EXEEXT) \
 	test_auth_pubkey_ok_rsa$(EXEEXT) \
+	test_auth_pubkey_ok_rsa_aes256gcm$(EXEEXT) \
 	test_auth_pubkey_ok_rsa_encrypted$(EXEEXT) \
 	test_auth_pubkey_ok_rsa_openssh$(EXEEXT) \
-	test_auth_pubkey_ok_rsa_signed$(EXEEXT) test_hostkey$(EXEEXT) \
-	test_hostkey_hash$(EXEEXT) test_read$(EXEEXT)
-am__EXEEXT_2 = test_simple$(EXEEXT)
-am__EXEEXT_3 = test_ssh2$(EXEEXT) test_auth_pubkey_ok_ed25519$(EXEEXT)
+	test_auth_pubkey_ok_rsa_signed$(EXEEXT) \
+	test_auth_pubkey_ok_rsa_sha2_256_signed$(EXEEXT) \
+	test_hostkey_hash$(EXEEXT) test_read$(EXEEXT) $(am__EXEEXT_2)
+am__EXEEXT_4 = test_simple$(EXEEXT)
+@HAVE_LIB_STATIC_TRUE@am__EXEEXT_5 = $(am__EXEEXT_4)
+am__EXEEXT_6 = $(am__EXEEXT_5)
+am__EXEEXT_7 = test_ssh2$(EXEEXT) test_auth_pubkey_ok_ed25519$(EXEEXT)
 librunner_la_LIBADD =
 am_librunner_la_OBJECTS = runner.lo session_fixture.lo \
 	openssh_fixture.lo
@@ -227,6 +241,13 @@ test_auth_pubkey_ok_rsa_SOURCES = test_auth_pubkey_ok_rsa.c
 test_auth_pubkey_ok_rsa_OBJECTS = test_auth_pubkey_ok_rsa.$(OBJEXT)
 test_auth_pubkey_ok_rsa_LDADD = $(LDADD)
 test_auth_pubkey_ok_rsa_DEPENDENCIES = librunner.la ../src/libssh2.la
+test_auth_pubkey_ok_rsa_aes256gcm_SOURCES =  \
+	test_auth_pubkey_ok_rsa_aes256gcm.c
+test_auth_pubkey_ok_rsa_aes256gcm_OBJECTS =  \
+	test_auth_pubkey_ok_rsa_aes256gcm.$(OBJEXT)
+test_auth_pubkey_ok_rsa_aes256gcm_LDADD = $(LDADD)
+test_auth_pubkey_ok_rsa_aes256gcm_DEPENDENCIES = librunner.la \
+	../src/libssh2.la
 test_auth_pubkey_ok_rsa_encrypted_SOURCES =  \
 	test_auth_pubkey_ok_rsa_encrypted.c
 test_auth_pubkey_ok_rsa_encrypted_OBJECTS =  \
@@ -240,6 +261,13 @@ test_auth_pubkey_ok_rsa_openssh_OBJECTS =  \
 	test_auth_pubkey_ok_rsa_openssh.$(OBJEXT)
 test_auth_pubkey_ok_rsa_openssh_LDADD = $(LDADD)
 test_auth_pubkey_ok_rsa_openssh_DEPENDENCIES = librunner.la \
+	../src/libssh2.la
+test_auth_pubkey_ok_rsa_sha2_256_signed_SOURCES =  \
+	test_auth_pubkey_ok_rsa_sha2_256_signed.c
+test_auth_pubkey_ok_rsa_sha2_256_signed_OBJECTS =  \
+	test_auth_pubkey_ok_rsa_sha2_256_signed.$(OBJEXT)
+test_auth_pubkey_ok_rsa_sha2_256_signed_LDADD = $(LDADD)
+test_auth_pubkey_ok_rsa_sha2_256_signed_DEPENDENCIES = librunner.la \
 	../src/libssh2.la
 test_auth_pubkey_ok_rsa_signed_SOURCES =  \
 	test_auth_pubkey_ok_rsa_signed.c
@@ -307,8 +335,10 @@ am__depfiles_remade = ./$(DEPDIR)/openssh_fixture.Plo \
 	./$(DEPDIR)/test_auth_pubkey_ok_ed25519_encrypted.Po \
 	./$(DEPDIR)/test_auth_pubkey_ok_ed25519_mem.Po \
 	./$(DEPDIR)/test_auth_pubkey_ok_rsa.Po \
+	./$(DEPDIR)/test_auth_pubkey_ok_rsa_aes256gcm.Po \
 	./$(DEPDIR)/test_auth_pubkey_ok_rsa_encrypted.Po \
 	./$(DEPDIR)/test_auth_pubkey_ok_rsa_openssh.Po \
+	./$(DEPDIR)/test_auth_pubkey_ok_rsa_sha2_256_signed.Po \
 	./$(DEPDIR)/test_auth_pubkey_ok_rsa_signed.Po \
 	./$(DEPDIR)/test_hostkey.Po ./$(DEPDIR)/test_hostkey_hash.Po \
 	./$(DEPDIR)/test_read.Po ./$(DEPDIR)/test_simple.Po \
@@ -342,8 +372,10 @@ SOURCES = $(librunner_la_SOURCES) test_aa_warmup.c \
 	test_auth_pubkey_ok_ed25519.c \
 	test_auth_pubkey_ok_ed25519_encrypted.c \
 	test_auth_pubkey_ok_ed25519_mem.c test_auth_pubkey_ok_rsa.c \
+	test_auth_pubkey_ok_rsa_aes256gcm.c \
 	test_auth_pubkey_ok_rsa_encrypted.c \
 	test_auth_pubkey_ok_rsa_openssh.c \
+	test_auth_pubkey_ok_rsa_sha2_256_signed.c \
 	test_auth_pubkey_ok_rsa_signed.c test_hostkey.c \
 	test_hostkey_hash.c test_read.c test_simple.c test_ssh2.c
 DIST_SOURCES = $(librunner_la_SOURCES) test_aa_warmup.c \
@@ -356,8 +388,10 @@ DIST_SOURCES = $(librunner_la_SOURCES) test_aa_warmup.c \
 	test_auth_pubkey_ok_ed25519.c \
 	test_auth_pubkey_ok_ed25519_encrypted.c \
 	test_auth_pubkey_ok_ed25519_mem.c test_auth_pubkey_ok_rsa.c \
+	test_auth_pubkey_ok_rsa_aes256gcm.c \
 	test_auth_pubkey_ok_rsa_encrypted.c \
 	test_auth_pubkey_ok_rsa_openssh.c \
+	test_auth_pubkey_ok_rsa_sha2_256_signed.c \
 	test_auth_pubkey_ok_rsa_signed.c test_hostkey.c \
 	test_hostkey_hash.c test_read.c test_simple.c test_ssh2.c
 RECURSIVE_TARGETS = all-recursive check-recursive cscopelist-recursive \
@@ -582,7 +616,7 @@ am__set_TESTS_bases = \
   bases=`echo $$bases`
 AM_TESTSUITE_SUMMARY_HEADER = ' for $(PACKAGE_STRING)'
 RECHECK_LOGS = $(TEST_LOGS)
-@RUN_DOCKER_TESTS_TRUE@am__EXEEXT_4 = $(am__EXEEXT_1)
+@RUN_DOCKER_TESTS_TRUE@am__EXEEXT_8 = $(am__EXEEXT_3)
 TEST_SUITE_LOG = test-suite.log
 LOG_DRIVER = $(SHELL) $(top_srcdir)/test-driver
 LOG_COMPILE = $(LOG_COMPILER) $(AM_LOG_FLAGS) $(LOG_FLAGS)
@@ -687,8 +721,12 @@ LIBMBEDCRYPTO = @LIBMBEDCRYPTO@
 LIBMBEDCRYPTO_PREFIX = @LIBMBEDCRYPTO_PREFIX@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
-LIBSREQUIRED = @LIBSREQUIRED@
-LIBSSH2VER = @LIBSSH2VER@
+LIBSSH2_CFLAG_EXTRAS = @LIBSSH2_CFLAG_EXTRAS@
+LIBSSH2_PC_LIBS = @LIBSSH2_PC_LIBS@
+LIBSSH2_PC_LIBS_PRIVATE = @LIBSSH2_PC_LIBS_PRIVATE@
+LIBSSH2_PC_REQUIRES = @LIBSSH2_PC_REQUIRES@
+LIBSSH2_PC_REQUIRES_PRIVATE = @LIBSSH2_PC_REQUIRES_PRIVATE@
+LIBSSH2_VERSION = @LIBSSH2_VERSION@
 LIBSSL = @LIBSSL@
 LIBSSL_PREFIX = @LIBSSL_PREFIX@
 LIBTOOL = @LIBTOOL@
@@ -787,41 +825,35 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
+
+# Copyright (C) The libssh2 project and its contributors.
+# SPDX-License-Identifier: BSD-3-Clause
 SUBDIRS = ossfuzz
 AM_CPPFLAGS = -I$(top_builddir)/src -I$(top_srcdir)/src -I$(top_srcdir)/include
+
+# This might hold -Werror
+AM_CFLAGS = @LIBSSH2_CFLAG_EXTRAS@
 
 # Keep this list sorted
 #
 # NOTE: test_auth_keyboard_info_request does not use the network, but when
 #       run as Windows standalone test, it intermittently fails on GHA with:
 #         `Terminate batch job (Y/N)?`
-DOCKER_TESTS = \
-  test_aa_warmup \
-  test_agent_forward_ok \
-  test_auth_keyboard_fail \
-  test_auth_keyboard_info_request \
-  test_auth_keyboard_ok \
-  test_auth_password_fail_password \
-  test_auth_password_fail_username \
-  test_auth_password_ok \
-  test_auth_pubkey_fail \
-  test_auth_pubkey_ok_dsa \
-  test_auth_pubkey_ok_ecdsa \
-  test_auth_pubkey_ok_ecdsa_signed \
-  test_auth_pubkey_ok_ed25519 \
-  test_auth_pubkey_ok_ed25519_encrypted \
-  test_auth_pubkey_ok_ed25519_mem \
-  test_auth_pubkey_ok_rsa \
-  test_auth_pubkey_ok_rsa_encrypted \
-  test_auth_pubkey_ok_rsa_openssh \
-  test_auth_pubkey_ok_rsa_signed \
-  test_hostkey \
-  test_hostkey_hash \
-  test_read
-
-STANDALONE_TESTS = \
-  test_simple
-
+DOCKER_TESTS = test_aa_warmup test_agent_forward_ok \
+	test_auth_keyboard_fail test_auth_keyboard_ok \
+	test_auth_password_fail_password \
+	test_auth_password_fail_username test_auth_password_ok \
+	test_auth_pubkey_fail test_auth_pubkey_ok_dsa \
+	test_auth_pubkey_ok_ecdsa test_auth_pubkey_ok_ecdsa_signed \
+	test_auth_pubkey_ok_ed25519 \
+	test_auth_pubkey_ok_ed25519_encrypted \
+	test_auth_pubkey_ok_ed25519_mem test_auth_pubkey_ok_rsa \
+	test_auth_pubkey_ok_rsa_aes256gcm \
+	test_auth_pubkey_ok_rsa_encrypted \
+	test_auth_pubkey_ok_rsa_openssh test_auth_pubkey_ok_rsa_signed \
+	test_auth_pubkey_ok_rsa_sha2_256_signed test_hostkey_hash \
+	test_read $(am__append_1)
+STANDALONE_TESTS = $(am__append_2)
 SSHD_TESTS = \
   test_ssh2 \
   test_auth_pubkey_ok_ed25519
@@ -829,14 +861,16 @@ SSHD_TESTS = \
 
 # Programs of the above that use internal libssh2 functions so they need
 # to be statically linked against libssh2
-TESTS_WITH_LIB_STATIC = \
+DOCKER_TESTS_STATIC = \
   test_auth_keyboard_info_request \
-  test_hostkey \
+  test_hostkey
+
+STANDALONE_TESTS_STATIC = \
   test_simple
 
 
 # Copy of the above for Makefile.am.
-# Is there a way to reuse the list above?
+# Is there a way to reuse the lists above?
 test_auth_keyboard_info_request_LDFLAGS = -static
 test_hostkey_LDFLAGS = -static
 test_simple_LDFLAGS = -static
@@ -862,6 +896,8 @@ EXTRA_DIST = \
   key_ed25519_encrypted.pub \
   key_rsa \
   key_rsa.pub \
+  key_rsa_aes256gcm \
+  key_rsa_aes256gcm.pub \
   key_rsa_encrypted \
   key_rsa_encrypted.pub \
   key_rsa_openssh \
@@ -869,6 +905,9 @@ EXTRA_DIST = \
   key_rsa_signed \
   key_rsa_signed-cert.pub \
   key_rsa_signed.pub \
+  key_rsa_sha2_256_signed \
+  key_rsa_sha2_256_signed-cert.pub \
+  key_rsa_sha2_256_signed.pub \
   mansyntax.sh \
   openssh_server/Dockerfile \
   openssh_server/authorized_keys \
@@ -886,11 +925,8 @@ EXTRA_DIST = \
   test_sshd.test
 
 
-# Get DOCKER_TESTS, STANDALONE_TESTS, SSHD_TESTS, TESTS_WITH_LIB_STATIC,
-# librunner_la_SOURCES defines and *_LDFLAGS for statically linked tests.
-
 # Some tests rely on the 'srcdir' env. Set by autotools automatically.
-TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(am__append_3)
+TESTS_ENVIRONMENT = EXEEXT=$(EXEEXT) $(am__append_5)
 
 # TAP tests
 TEST_EXTENSIONS = .test
@@ -915,9 +951,9 @@ $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am $(srcdir)/Ma
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu tests/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign tests/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu tests/Makefile
+	  $(AUTOMAKE) --foreign tests/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -1024,6 +1060,10 @@ test_auth_pubkey_ok_rsa$(EXEEXT): $(test_auth_pubkey_ok_rsa_OBJECTS) $(test_auth
 	@rm -f test_auth_pubkey_ok_rsa$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_auth_pubkey_ok_rsa_OBJECTS) $(test_auth_pubkey_ok_rsa_LDADD) $(LIBS)
 
+test_auth_pubkey_ok_rsa_aes256gcm$(EXEEXT): $(test_auth_pubkey_ok_rsa_aes256gcm_OBJECTS) $(test_auth_pubkey_ok_rsa_aes256gcm_DEPENDENCIES) $(EXTRA_test_auth_pubkey_ok_rsa_aes256gcm_DEPENDENCIES) 
+	@rm -f test_auth_pubkey_ok_rsa_aes256gcm$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_auth_pubkey_ok_rsa_aes256gcm_OBJECTS) $(test_auth_pubkey_ok_rsa_aes256gcm_LDADD) $(LIBS)
+
 test_auth_pubkey_ok_rsa_encrypted$(EXEEXT): $(test_auth_pubkey_ok_rsa_encrypted_OBJECTS) $(test_auth_pubkey_ok_rsa_encrypted_DEPENDENCIES) $(EXTRA_test_auth_pubkey_ok_rsa_encrypted_DEPENDENCIES) 
 	@rm -f test_auth_pubkey_ok_rsa_encrypted$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_auth_pubkey_ok_rsa_encrypted_OBJECTS) $(test_auth_pubkey_ok_rsa_encrypted_LDADD) $(LIBS)
@@ -1031,6 +1071,10 @@ test_auth_pubkey_ok_rsa_encrypted$(EXEEXT): $(test_auth_pubkey_ok_rsa_encrypted_
 test_auth_pubkey_ok_rsa_openssh$(EXEEXT): $(test_auth_pubkey_ok_rsa_openssh_OBJECTS) $(test_auth_pubkey_ok_rsa_openssh_DEPENDENCIES) $(EXTRA_test_auth_pubkey_ok_rsa_openssh_DEPENDENCIES) 
 	@rm -f test_auth_pubkey_ok_rsa_openssh$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(test_auth_pubkey_ok_rsa_openssh_OBJECTS) $(test_auth_pubkey_ok_rsa_openssh_LDADD) $(LIBS)
+
+test_auth_pubkey_ok_rsa_sha2_256_signed$(EXEEXT): $(test_auth_pubkey_ok_rsa_sha2_256_signed_OBJECTS) $(test_auth_pubkey_ok_rsa_sha2_256_signed_DEPENDENCIES) $(EXTRA_test_auth_pubkey_ok_rsa_sha2_256_signed_DEPENDENCIES) 
+	@rm -f test_auth_pubkey_ok_rsa_sha2_256_signed$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(test_auth_pubkey_ok_rsa_sha2_256_signed_OBJECTS) $(test_auth_pubkey_ok_rsa_sha2_256_signed_LDADD) $(LIBS)
 
 test_auth_pubkey_ok_rsa_signed$(EXEEXT): $(test_auth_pubkey_ok_rsa_signed_OBJECTS) $(test_auth_pubkey_ok_rsa_signed_DEPENDENCIES) $(EXTRA_test_auth_pubkey_ok_rsa_signed_DEPENDENCIES) 
 	@rm -f test_auth_pubkey_ok_rsa_signed$(EXEEXT)
@@ -1081,8 +1125,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_auth_pubkey_ok_ed25519_encrypted.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_auth_pubkey_ok_ed25519_mem.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_auth_pubkey_ok_rsa.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_auth_pubkey_ok_rsa_aes256gcm.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_auth_pubkey_ok_rsa_encrypted.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_auth_pubkey_ok_rsa_openssh.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_auth_pubkey_ok_rsa_sha2_256_signed.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_auth_pubkey_ok_rsa_signed.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_hostkey.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/test_hostkey_hash.Po@am__quote@ # am--include-marker
@@ -1391,13 +1437,6 @@ test_auth_keyboard_fail.log: test_auth_keyboard_fail$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
-test_auth_keyboard_info_request.log: test_auth_keyboard_info_request$(EXEEXT)
-	@p='test_auth_keyboard_info_request$(EXEEXT)'; \
-	b='test_auth_keyboard_info_request'; \
-	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
-	--log-file $$b.log --trs-file $$b.trs \
-	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
-	"$$tst" $(AM_TESTS_FD_REDIRECT)
 test_auth_keyboard_ok.log: test_auth_keyboard_ok$(EXEEXT)
 	@p='test_auth_keyboard_ok$(EXEEXT)'; \
 	b='test_auth_keyboard_ok'; \
@@ -1482,6 +1521,13 @@ test_auth_pubkey_ok_rsa.log: test_auth_pubkey_ok_rsa$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
+test_auth_pubkey_ok_rsa_aes256gcm.log: test_auth_pubkey_ok_rsa_aes256gcm$(EXEEXT)
+	@p='test_auth_pubkey_ok_rsa_aes256gcm$(EXEEXT)'; \
+	b='test_auth_pubkey_ok_rsa_aes256gcm'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
 test_auth_pubkey_ok_rsa_encrypted.log: test_auth_pubkey_ok_rsa_encrypted$(EXEEXT)
 	@p='test_auth_pubkey_ok_rsa_encrypted$(EXEEXT)'; \
 	b='test_auth_pubkey_ok_rsa_encrypted'; \
@@ -1503,9 +1549,9 @@ test_auth_pubkey_ok_rsa_signed.log: test_auth_pubkey_ok_rsa_signed$(EXEEXT)
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
 	"$$tst" $(AM_TESTS_FD_REDIRECT)
-test_hostkey.log: test_hostkey$(EXEEXT)
-	@p='test_hostkey$(EXEEXT)'; \
-	b='test_hostkey'; \
+test_auth_pubkey_ok_rsa_sha2_256_signed.log: test_auth_pubkey_ok_rsa_sha2_256_signed$(EXEEXT)
+	@p='test_auth_pubkey_ok_rsa_sha2_256_signed$(EXEEXT)'; \
+	b='test_auth_pubkey_ok_rsa_sha2_256_signed'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -1520,6 +1566,20 @@ test_hostkey_hash.log: test_hostkey_hash$(EXEEXT)
 test_read.log: test_read$(EXEEXT)
 	@p='test_read$(EXEEXT)'; \
 	b='test_read'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+test_auth_keyboard_info_request.log: test_auth_keyboard_info_request$(EXEEXT)
+	@p='test_auth_keyboard_info_request$(EXEEXT)'; \
+	b='test_auth_keyboard_info_request'; \
+	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
+	--log-file $$b.log --trs-file $$b.trs \
+	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
+	"$$tst" $(AM_TESTS_FD_REDIRECT)
+test_hostkey.log: test_hostkey$(EXEEXT)
+	@p='test_hostkey$(EXEEXT)'; \
+	b='test_hostkey'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -1668,8 +1728,10 @@ distclean: distclean-recursive
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_ed25519_encrypted.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_ed25519_mem.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa.Po
+	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_aes256gcm.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_encrypted.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_openssh.Po
+	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_sha2_256_signed.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_signed.Po
 	-rm -f ./$(DEPDIR)/test_hostkey.Po
 	-rm -f ./$(DEPDIR)/test_hostkey_hash.Po
@@ -1740,8 +1802,10 @@ maintainer-clean: maintainer-clean-recursive
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_ed25519_encrypted.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_ed25519_mem.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa.Po
+	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_aes256gcm.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_encrypted.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_openssh.Po
+	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_sha2_256_signed.Po
 	-rm -f ./$(DEPDIR)/test_auth_pubkey_ok_rsa_signed.Po
 	-rm -f ./$(DEPDIR)/test_hostkey.Po
 	-rm -f ./$(DEPDIR)/test_hostkey_hash.Po
