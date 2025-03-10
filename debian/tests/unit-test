@@ -4,6 +4,7 @@ set -e
 
 exec 2>&1
 
+# First: Run tests with libssh2.so installed from the package
 ./configure --disable-docker-tests
 
 make
@@ -14,3 +15,8 @@ ln -s /usr/lib/$(dpkg-architecture -qDEB_BUILD_MULTIARCH)/libssh2.so.? src/.libs
 ln -s /usr/lib/$(dpkg-architecture -qDEB_BUILD_MULTIARCH)/libssh2.so.?.?.? src/.libs/
 
 make check
+
+# Second: Check that 'pkg-config --libs libssh2' does not return private libs
+if [ $(pkg-config --libs libssh2) != "-lssh2" ]; then
+  false
+fi
