@@ -1,3 +1,16 @@
+libssh2 (1.11.1-1+pexip24u1) pexip; urgency=medium
+
+  * New upstream release
+  * Remove uneeded patches:
+    * openssl3-non-deprecated.patch: merged upstream in
+      https://github.com/libssh2/libssh2/commit/b0ab005fe79260e6e9fe08f8d73b58dd4856943d
+    * openssl3-hmac-deprecated.patch: equivalent changes made upstream in:
+      https://github.com/libssh2/libssh2/commit/f64885b6ab9bbdae2da9ebd70f4dd5cea56e838a
+    * rsa-openssl-fixed.patch: equivalent changes made upstream in:
+      https://github.com/libssh2/libssh2/commit/82581941d6cd91cd00cf6d8bee1b2a660864ca19
+
+ -- Huw Jones <huw@pexip.com>  Mon, 10 Mar 2025 14:34:12 +0000
+
 libssh2 (1.11.1-1) unstable; urgency=medium
 
   [ Nicolas Mora ]

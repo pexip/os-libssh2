@@ -6,6 +6,3 @@
 #CVE-2023-48795.patch
 #maxpathlen.patch
 #openssh-9.8.patch
-openssl3-non-deprecated.patch
-openssl3-hmac-deprecated.patch
-rsa-openssl-fixes.patch
